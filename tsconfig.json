@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "declaration": true,
+    "outDir": "lib",
+    "module": "commonjs",
+    "skipLibCheck": true
+  },
+  "include": [
+    "src"
+  ]
+}

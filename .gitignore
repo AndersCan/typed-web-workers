@@ -1,3 +1,7 @@
+index.html
+webpack.config.js
+bundle.js
+
 # Logs
 logs
 *.log
