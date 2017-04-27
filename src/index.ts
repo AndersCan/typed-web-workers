@@ -5,13 +5,7 @@ export class TypedWorker<In, Out>{
   }
 
   constructor(workerFunction: (input: In) => Out) {
-    const workerFile =
-      `self.onmessage = function(e) { \
-        postMessage( \
-          (${workerFunction}).call(this, e.data) \
-        )  \
-      } \
-      `;
+    const workerFile = `self.onmessage=function(e){postMessage((${workerFunction}).call(this, e.data))}`;
     const blob = new Blob([workerFile], { type: 'application/javascript' });
     this._worker = new Worker(URL.createObjectURL(blob));
 
