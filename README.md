@@ -1,7 +1,15 @@
 # typed-web-workers
-Simple wrapper for creating webworkers with types.
+## Currently in pre-alpha
+
+# Info
+Simple wrapper for creating web workers with type safety by using TypeScript.
+
+The constructor for the class `TypedWorker` takes as input the function that the web worker will execute.
+This method has the signature `workerFunction: (input: In) => Out`. `In` and `Out` are generic so you decide yourself their type.
 
 
+# Example code
+## Return the sum of two numbers
 ```javascript
 interface Sum {
   a: number
