@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "strictNullChecks": true,
-    "alwaysStrict": true,
+    "strict": true,
     "declaration": true,
     "outDir": "lib",
     "module": "commonjs",

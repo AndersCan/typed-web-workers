@@ -5,7 +5,7 @@
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
-    "build": "tsc -p . && node ./node_modules/uglify-js/bin/uglifyjs -cm --source-map lib/index.min.js.map --output lib/index.min.js -- lib/index.js"
+    "build": "tsc -p . && uglifyjs -cm --source-map lib/index.min.js.map --output lib/index.min.js -- lib/index.js"
   },
   "keywords": [
     "web",
@@ -15,9 +15,9 @@
   "author": "anderscan",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^2.2.2",
-    "uglify-js": "^2.8.22",
-    "webpack": "^2.4.1"
+    "typescript": "2.3.1",
+    "uglify-js": "2.8.22",
+    "webpack": "2.4.1"
   },
   "repository": "AndersCan/typed-web-workers"
 }
