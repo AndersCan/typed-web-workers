@@ -1,2 +1,6 @@
+coverage/
 test/
+src/
 karma.conf.js
+index.html
+tsconfig.json
