@@ -1,5 +1,4 @@
 # typed-web-workers
-## Currently in pre-alpha
 
 # Info
 Wrapper for creating web workers with type safety using TypeScript.
