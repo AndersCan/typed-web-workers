@@ -1,6 +1,6 @@
 {
   "name": "typed-web-workers",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple wrapper for creating webworkers with types",
   "main": "lib/index",
   "typings": "lib/index",
