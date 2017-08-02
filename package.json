@@ -25,6 +25,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-spec-reporter": "0.0.31",
     "karma-typescript": "^3.0.1",
+    "uglify-js": "2.8.22",
     "typescript": "2.3.1"
   },
   "repository": "AndersCan/typed-web-workers"
