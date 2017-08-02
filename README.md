@@ -1,4 +1,5 @@
 # typed-web-workers
+[![Build Status](https://travis-ci.org/AndersCan/typed-web-workers.svg?branch=master)](https://travis-ci.org/AndersCan/typed-web-workers)[![Coverage Status](https://coveralls.io/repos/github/AndersCan/typed-web-workers/badge.svg?branch=master)](https://coveralls.io/github/AndersCan/typed-web-workers?branch=master)
 Library that help you get quickly up and running with web workers in either TypeScript or JavaScript projects.
 
 # Installation
