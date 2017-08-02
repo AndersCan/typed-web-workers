@@ -1,18 +1,17 @@
 export class TypedWorker<In, Out>{
-  private _worker: Worker
+  private _nativeWorker: Worker
 
   constructor(
     private readonly workerFunction: (input: In) => Out,
-    public onMessage = (output: Out) => {
-      return;
-    }) {
+    public onMessage = (output: Out) => { }) {
     const postMessage = `postMessage((${workerFunction}).call(this, e.data))`
     const workerFile = `self.onmessage=function(e){${postMessage}}`;
     const blob = new Blob([workerFile], { type: 'application/javascript' });
-    this._worker = new Worker(URL.createObjectURL(blob));
 
-    this._worker.onmessage = (e: MessageEvent) => {
-      this.onMessage(e.data)
+    this._nativeWorker = new Worker(URL.createObjectURL(blob));
+
+    this._nativeWorker.onmessage = (messageEvent: MessageEvent) => {
+      this.onMessage(messageEvent.data)
     }
 
   }
@@ -21,11 +20,11 @@ export class TypedWorker<In, Out>{
    * @param workerMessage message to send to worker
    */
   public postMessage(workerMessage: In): void {
-    this._worker.postMessage(workerMessage)
+    this._nativeWorker.postMessage(workerMessage)
   }
 
   public terminate(): void {
-    this._worker.terminate();
+    this._nativeWorker.terminate();
   }
 }
 
