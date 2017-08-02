@@ -5,7 +5,7 @@
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
-    "build": "tsc -p . && uglifyjs -cm --source-map lib/index.min.js.map --output lib/index.min.js -- lib/index.js",
+    "build": "tsc -p . && uglifyjs -cm --source-map lib/index.min.js.map --output lib/index.min.js -- lib/index.js lib/TypedWorker.js",
     "test": "karma start karma.conf.js"
   },
   "keywords": [
