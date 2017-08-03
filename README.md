@@ -4,8 +4,10 @@
 Library that help you get quickly up and running with web workers in either TypeScript or JavaScript projects.
 
 # Installation
-`npm i typed-web-workers -S` 
+`npm i typed-web-workers -S`
+
 or
+
 `yarn add typed-web-workers`
 
 # Motivation
