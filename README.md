@@ -4,10 +4,12 @@
 Library that help you get quickly up and running with web workers in either TypeScript or JavaScript projects.
 
 # Installation
-`npm i typed-web-workers -S` or `yarn add typed-web-workers`
+`npm i typed-web-workers -S` 
+or
+`yarn add typed-web-workers`
 
 # Motivation
-When working with web workers, you normally do not know much about what types of paramaters it accepts. This is because all input that it receives is strings. Working with stringified objects makes coding less intuative and we lose compilation errors. We want TypeScript to catch as many errors as possible during compilation. We also want to have code completion so we can be more effective. To solve these issues, we have created a `TypedWorker`.
+We want TypeScript to catch as many errors as possible during compilation. We also want to have code completion so we can be more effective. To solve these issues when working with native web workers, we have created a `TypedWorker`.
 
 # How does it work?
 Simply put, a TypedWorker is a wrapper for using a normal web worker. The benefit of using this wrapper is that it gives us typed inputs and outputs. Lets look at a small example to help illustrate this.
