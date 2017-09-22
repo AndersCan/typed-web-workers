@@ -5,6 +5,7 @@
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build": "tsc -p .",
     "test": "karma start karma.conf.js"
   },
