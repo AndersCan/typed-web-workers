@@ -1,5 +1,5 @@
 # typed-web-workers
-[![Build Status](https://travis-ci.org/AndersCan/typed-web-workers.svg?branch=master)](https://travis-ci.org/AndersCan/typed-web-workers)[![Coverage Status](https://coveralls.io/repos/github/AndersCan/typed-web-workers/badge.svg?branch=master)](https://coveralls.io/github/AndersCan/typed-web-workers?branch=master)
+[![Build Status](https://travis-ci.org/AndersCan/typed-web-workers.svg?branch=master)](https://travis-ci.org/AndersCan/typed-web-workers)[![codecov](https://codecov.io/gh/AndersCan/typed-web-workers/branch/master/graph/badge.svg)](https://codecov.io/gh/AndersCan/typed-web-workers)
 
 Library that help you get quickly up and running with web workers in either TypeScript or JavaScript projects.
 
@@ -15,6 +15,10 @@ We want TypeScript to catch as many errors as possible during compilation. We al
 
 # How does it work?
 Simply put, a TypedWorker is a wrapper for using a normal web worker. The benefit of using this wrapper is that it gives us typed inputs and outputs. Lets look at a small example to help illustrate this.
+
+## Import
+We first need to import a `TypedWorker` into our file.
+`import { TypedWorker } from 'typed-web-workers'`
 
 ## Sum of two numbers
 ```javascript
