@@ -1,5 +1,7 @@
 import { TypedWorker } from './TypedWorker'
+import { CallBackWorker } from './CallBackWorker'
 
 export {
-  TypedWorker
+  TypedWorker,
+  CallBackWorker
 }
