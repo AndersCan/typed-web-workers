@@ -108,4 +108,26 @@ describe("Callback Worker", () => {
       expect(result).toEqual([3, 2, 1]);
     });
   })
+  describe("Termination", () => {
+    let msgCounter = 0;
+    let numberWorker: CallBackWorker<number, number>;
+    beforeEach(done => {
+      numberWorker = new CallBackWorker(
+        (input: number, cb) => {
+          cb(input);
+        },
+        (output) => {
+          numberWorker.terminate()
+          msgCounter = output;
+          done()
+        }
+      )
+      numberWorker.postMessage(1);
+      numberWorker.postMessage(2);
+    });
+
+    it("stops handling messages", function () {
+      expect(msgCounter).toEqual(1)
+    });
+  })
 })
