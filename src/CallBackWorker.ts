@@ -1,4 +1,17 @@
-export class CallBackWorker<In, Out>{
+export interface ITypedWorker<In, Out> {
+  terminate: () => void
+  onMessage: (output: Out) => void
+  postMessage: (workerMessage: In, transfer?: (ArrayBuffer | MessagePort | ImageBitmap)[]) => void
+}
+
+export function createWorker<In, Out>(
+  workerFunction: (input: In, cb: (_: Out) => void) => void,
+  onMessage = (output: Out) => { }
+): ITypedWorker<In, Out> {
+  return new CallBackWorker(workerFunction, onMessage)
+}
+
+class CallBackWorker<In, Out> implements ITypedWorker<In, Out> {
   private _nativeWorker: Worker
 
   constructor(
@@ -20,11 +33,11 @@ export class CallBackWorker<In, Out>{
    * Post message to worker for processing
    * @param workerMessage message to send to worker
    */
-  public postMessage(workerMessage: In) {
-    this._nativeWorker.postMessage(workerMessage)
+  public postMessage(workerMessage: In, transfer?: (ArrayBuffer | MessagePort | ImageBitmap)[]) {
+    this._nativeWorker.postMessage(workerMessage, transfer)
   }
 
-  public async terminate() {
+  public terminate() {
     this._nativeWorker.terminate();
   }
 

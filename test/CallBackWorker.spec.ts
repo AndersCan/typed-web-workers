@@ -1,12 +1,13 @@
-import { CallBackWorker } from '../src/index'
+import { createWorker, IWorker } from '../src/index'
 
 
 describe("Callback Worker", () => {
   describe("simple cb with number", () => {
-    let cbNumberWorker: CallBackWorker<number, number>;
+    let cbNumberWorker: IWorker<number, number>;
+
     let result = 0;
     beforeEach(done => {
-      cbNumberWorker = new CallBackWorker(
+      cbNumberWorker = createWorker(
         (input: number, cb) => {
           cb(input);
         },
@@ -25,10 +26,10 @@ describe("Callback Worker", () => {
   })
 
   describe("simple cb with object", () => {
-    let promiseObjectWorker: CallBackWorker<{ a: number }, { b: number }>;
+    let objectWorker: IWorker<{ a: number }, { b: number }>;
     let result = {}
     beforeEach(done => {
-      promiseObjectWorker = new CallBackWorker(
+      objectWorker = createWorker(
         (input: { a: number }, cb) => {
           cb({ b: input.a });
         },
@@ -37,7 +38,7 @@ describe("Callback Worker", () => {
           done();
         }
       )
-      promiseObjectWorker.postMessage({ a: 10 });
+      objectWorker.postMessage({ a: 10 });
     });
 
     it("simple object return", function () {
@@ -46,11 +47,11 @@ describe("Callback Worker", () => {
   });
 
   describe("multiple cb", () => {
-    let multiReponse: CallBackWorker<number, number>;
+    let multiReponse: IWorker<number, number>;
     let result: number[] = [];
     beforeEach(done => {
       result = [];
-      multiReponse = new CallBackWorker(
+      multiReponse = createWorker(
         (input: number, cb) => {
           cb(input);
         },
@@ -76,11 +77,11 @@ describe("Callback Worker", () => {
     });
   })
   describe("async cbs", () => {
-    let asyncWorker: CallBackWorker<number, number>;
+    let asyncWorker: IWorker<number, number>;
     let result: number[] = [];
     beforeEach(done => {
       result = [];
-      asyncWorker = new CallBackWorker(
+      asyncWorker = createWorker(
         (input: number, cb) => {
           setTimeout(
             () => cb(input),
@@ -110,9 +111,9 @@ describe("Callback Worker", () => {
   })
   describe("Termination", () => {
     let msgCounter = 0;
-    let numberWorker: CallBackWorker<number, number>;
+    let numberWorker: IWorker<number, number>;
     beforeEach(done => {
-      numberWorker = new CallBackWorker(
+      numberWorker = createWorker(
         (input: number, cb) => {
           cb(input);
         },

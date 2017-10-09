@@ -19,8 +19,8 @@ export class TypedWorker<In, Out>{
    * Post message to worker for processing
    * @param workerMessage message to send to worker
    */
-  public postMessage(workerMessage: In): void {
-    this._nativeWorker.postMessage(workerMessage)
+  public postMessage(workerMessage: In, transfer?: (ArrayBuffer | MessagePort | ImageBitmap)[]): void {
+    this._nativeWorker.postMessage(workerMessage, transfer)
   }
 
   public terminate(): void {
