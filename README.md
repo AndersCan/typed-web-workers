@@ -17,8 +17,11 @@ We want TypeScript to catch as many errors as possible during compilation. We al
 Simply put, a TypedWorker is a wrapper for using a normal web worker. The benefit of using this wrapper is that it gives us typed inputs and outputs. Lets look at a small example to help illustrate this.
 
 ## Import
-We first need to import a `TypedWorker` into our file.
-`import { TypedWorker } from 'typed-web-workers'`
+We first need to import a `createWorker` into our file. (Optionally you can also include the worker interface `ITypedWorker`)
+
+`import { createWorker, ITypedWorker } from 'typed-web-workers'`
+
+Side-note: Some people dislike prefixing TS interfaces with an `I`. I Have opted to use it as it makes it explicit that this is an interface and not a class.
 
 ## Sum of two numbers
 ```javascript
@@ -30,10 +33,20 @@ interface Values {
 }
 // Now we need to define the function that the worker will perform when it
 // receives a message of type `Values`.
-// In our case it is just going to add x with y and return the result.
+// We would expect it to look something like this
 function workFn(input: Values): number {
   return input.x + input.y
 }
+
+// However, as there are many use cases for when we would like to return
+// multiple results from a single input or return results asynchronous.
+// We have to modify our `workFn`.
+// We will, basically, replace `return` with a function call.
+function workFn(input: Values, callback: (_: number) => void)): void {
+  callback(input.x + input.y)
+}
+
+
 // Now that our worker has calculated the sum of x and y, we should to do
 // something with. Lets create a function that just logs the result.
 // We could also call this function the `outputFn` or `handleResultFn`
@@ -42,7 +55,7 @@ function logFn(result: number) {
 }
 
 // Lets put this all together and create our TypedWebWorker.
-const typedWorker = new TypedWorker(workFn, logFn)
+const typedWorker: ITypedWorker<number, number> = createWorker(workFn, logFn)
 
 // Thats it! The Worker is now ready to process messages of type 'Values'
 // and log the results to the console.
@@ -59,17 +72,25 @@ You now have a type safe web worker that can sum numbers!
 
 We could also write this example *much* shorter and still have the exact same type safety.
 ```javascript
-const typedWorker = new TypedWorker(
-  (input: { x: number, y: number }) => input.x + input.y,
+const typedWorker = createWorker(
+  (input: { x: number, y: number }, cb: (_: number) => void) => cb(input.x + input.y),
   (result) => console.log(result)
 )
 ```
+If we are explicit with the type of `typedWorker`, we can have much shorter function signatures.
+```javascript
+const typedWorker: ITypedWorker<{ x: number, y: number }, number> = createWorker(
+  (input, cb) => cb(input.x + input.y),
+  (result) => console.log(result)
+)
+```
+
 Also, if we do not want to log the result, we can just ommit the second function as it is optional.
 
 In case you were unsure, you can use this in a JavaScript project just as easily, just ommit the TS types.
 ```javascript
-const typedWorker = new TypedWorker(
-  (input) => input.x + input.y,
+const typedWorker = createWorker(
+  (input, cb) => cb(input.x + input.y),
   (result) => console.log(result)
 )
 typedWorker.postMessage({ x: 5, y: 5 }) // logs: "10"
@@ -80,7 +101,7 @@ The `workFn` that we give our worker can only use the data provided from the `in
 It does not have access to any state other that the `input`.
 ```javascript
 const results = []
-function workFn(input: Values): number {
+function workFn(input: Values, cb): number {
   results.push(input.x + input.y) // this would not work
 }
 ```
@@ -94,9 +115,8 @@ function workFn(input: Values): number {
 If you wish to add the results to an array, do it in the `Output` function.
 ```javascript
 const results = []
-const typedWorker = new TypedWorker(
-  (input: { x: number, y: number }) => input.x + input.y,
+const typedWorker = createWorker(
+  (input: { x: number, y: number }, cb) => cb(input.x + input.y),
   (result) => results.push(results)
 )
 ```
-Last thing, `TypedWorker` is generic, so *you* decide what the types of the `input` and `output` functions should be.

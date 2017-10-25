@@ -1,7 +1,7 @@
 {
   "name": "typed-web-workers",
   "version": "1.2.2",
-  "description": "Quickly create web workers with type safety",
+  "description": "Create web workers with type safety",
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
@@ -28,7 +28,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-spec-reporter": "0.0.31",
     "karma-typescript": "^3.0.1",
-    "typescript": "2.3.1"
+    "typescript": "2.5.3"
   },
   "repository": "AndersCan/typed-web-workers"
 }
