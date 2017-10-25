@@ -1,12 +1,6 @@
-export declare class TypedWorker<In, Out> {
-    private readonly workerFunction;
+export interface ITypedWorker<In, Out> {
+    terminate: () => void;
     onMessage: (output: Out) => void;
-    private _nativeWorker;
-    constructor(workerFunction: (input: In) => Out, onMessage?: (output: Out) => void);
-    /**
-     * Post message to worker for processing
-     * @param workerMessage message to send to worker
-     */
-    postMessage(workerMessage: In): void;
-    terminate(): void;
+    postMessage: (workerMessage: In, transfer?: (ArrayBuffer | MessagePort | ImageBitmap)[]) => void;
 }
+export declare function createWorker<In, Out>(workerFunction: (input: In, cb: (_: Out) => void) => void, onMessage?: (output: Out) => void): ITypedWorker<In, Out>;

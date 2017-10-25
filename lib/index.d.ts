@@ -1,2 +1,2 @@
-import { TypedWorker } from './TypedWorker';
-export { TypedWorker };
+import { createWorker, ITypedWorker } from './TypedWorker';
+export { createWorker, ITypedWorker };
