@@ -1,10 +1,23 @@
-export class TypedWorker<In, Out>{
+export interface ITypedWorker<In, Out> {
+  terminate: () => void
+  onMessage: (output: Out) => void
+  postMessage: (workerMessage: In, transfer?: (ArrayBuffer | MessagePort | ImageBitmap)[]) => void
+}
+
+export function createWorker<In, Out>(
+  workerFunction: (input: In, cb: (_: Out) => void) => void,
+  onMessage = (output: Out) => { }
+): ITypedWorker<In, Out> {
+  return new TypedWorker(workerFunction, onMessage)
+}
+
+class TypedWorker<In, Out> implements ITypedWorker<In, Out> {
   private _nativeWorker: Worker
 
   constructor(
-    private readonly workerFunction: (input: In) => Out,
+    private readonly workerFunction: (input: In, cb: (_: Out) => void) => void,
     public onMessage = (output: Out) => { }) {
-    const postMessage = `postMessage((${workerFunction}).call(this, e.data))`
+    const postMessage = `(${workerFunction}).call(this, e.data, postMessage)`
     const workerFile = `self.onmessage=function(e){${postMessage}}`;
     const blob = new Blob([workerFile], { type: 'application/javascript' });
 

@@ -1,8 +1,6 @@
-import { TypedWorker } from './TypedWorker'
-import { createWorker, ITypedWorker } from './CallBackWorker'
+import { createWorker, ITypedWorker } from './TypedWorker'
 
 export {
-  TypedWorker,
   createWorker,
   ITypedWorker
 }
