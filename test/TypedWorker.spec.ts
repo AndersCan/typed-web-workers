@@ -92,7 +92,7 @@ describe("TypedWorker", function () {
           }
         )
         numberRangeLarge.forEach(n => numberWorker.postMessage(n))
-      });
+      }, 5000);
 
       it("returns correct result after adding numberRangeLarge", function () {
         const expected = numberRangeLarge.reduce((c, p) => c + p)
