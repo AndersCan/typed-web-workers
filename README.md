@@ -1,5 +1,6 @@
 # typed-web-workers
 [![Build Status](https://travis-ci.org/AndersCan/typed-web-workers.svg?branch=master)](https://travis-ci.org/AndersCan/typed-web-workers)[![codecov](https://codecov.io/gh/AndersCan/typed-web-workers/branch/master/graph/badge.svg)](https://codecov.io/gh/AndersCan/typed-web-workers)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 Library that help you get quickly up and running with web workers in either TypeScript or JavaScript projects.
 

@@ -7,7 +7,8 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc -p .",
-    "test": "karma start karma.conf.js"
+    "test": "karma start karma.conf.js",
+    "lint": "prettier \"./{src,test}/**.ts\" --write"
   },
   "keywords": [
     "web",
@@ -28,6 +29,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-spec-reporter": "0.0.31",
     "karma-typescript": "^3.0.1",
+    "prettier": "^1.7.4",
     "typescript": "2.5.3"
   },
   "repository": "AndersCan/typed-web-workers"
