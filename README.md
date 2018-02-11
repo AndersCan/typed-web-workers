@@ -56,7 +56,7 @@ function logFn(result: number) {
 }
 
 // Lets put this all together and create our TypedWebWorker.
-const typedWorker: ITypedWorker<number, number> = createWorker(workFn, logFn)
+const typedWorker: ITypedWorker<Values, number> = createWorker(workFn, logFn)
 
 // Thats it! The Worker is now ready to process messages of type 'Values'
 // and log the results to the console.
