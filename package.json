@@ -1,6 +1,6 @@
 {
   "name": "typed-web-workers",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Create web workers with type safety",
   "main": "lib/index",
   "typings": "lib/index",
