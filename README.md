@@ -43,7 +43,7 @@ function workFn(input: Values): number {
 // multiple results from a single input or return results asynchronous.
 // We have to modify our `workFn`.
 // We will, basically, replace `return` with a function call.
-function workFn(input: Values, callback: (_: number) => void)): void {
+function workFn(input: Values, callback: (_: number) => void): void {
   callback(input.x + input.y)
 }
 
