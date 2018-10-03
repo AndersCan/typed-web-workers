@@ -1,31 +1,52 @@
-import { createWorker, ITypedWorker } from '../src/index'
+import {
+  createWorker,
+  ITypedWorker
+} from '../src/index'
 
 describe('TypedWorker - transfer', function() {
   describe('can transfer ownership from UI to worker', () => {
     let workerContextBytelength: number
     let uiContextByteLength: number
     beforeEach(function(done) {
-      const myUInt8Array = new Uint8Array(1024 * 1024 * 8) // 8MB
-      for (let i = 0; i < myUInt8Array.length; ++i) {
+      const myUInt8Array = new Uint8Array(
+        1024 * 1024 * 8
+      ) // 8MB
+      for (
+        let i = 0;
+        i < myUInt8Array.length;
+        ++i
+      ) {
         myUInt8Array[i] = i
       }
-      const transferWorker: ITypedWorker<ArrayBuffer, number> = createWorker(
-        (input, cb) => cb(input.byteLength),
-        output => {
+      const transferWorker: ITypedWorker<
+        ArrayBuffer,
+        number
+      > = createWorker({
+        workerFunction: (input, cb) =>
+          cb(input.byteLength),
+        onMessage: output => {
           workerContextBytelength = output
           done()
         }
+      })
+      transferWorker.postMessage(
+        myUInt8Array.buffer,
+        [myUInt8Array.buffer]
       )
-      transferWorker.postMessage(myUInt8Array.buffer, [myUInt8Array.buffer])
-      uiContextByteLength = myUInt8Array.byteLength
+      uiContextByteLength =
+        myUInt8Array.byteLength
     })
 
     it('UI context byteLength should be zero', function() {
-      expect(uiContextByteLength).toEqual(0)
+      expect(
+        uiContextByteLength
+      ).toEqual(0)
     })
 
     it('Worker context byteLength should be greater than zero', function() {
-      expect(workerContextBytelength).toBeGreaterThan(0)
+      expect(
+        workerContextBytelength
+      ).toBeGreaterThan(0)
     })
   })
 
@@ -36,33 +57,48 @@ describe('TypedWorker - transfer', function() {
       const transferWorker: ITypedWorker<
         number,
         ArrayBuffer | number
-      > = createWorker(
-        (input, cb) => {
-          const myUInt8Array = new Uint8Array(1024 * 1024 * 8) // 8MB
-          for (let i = 0; i < myUInt8Array.length; ++i) {
+      > = createWorker({
+        workerFunction: (input, cb) => {
+          const myUInt8Array = new Uint8Array(
+            1024 * 1024 * 8
+          ) // 8MB
+          for (
+            let i = 0;
+            i < myUInt8Array.length;
+            ++i
+          ) {
             myUInt8Array[i] = i
           }
-          cb(myUInt8Array.buffer, [myUInt8Array.buffer])
+          cb(myUInt8Array.buffer, [
+            myUInt8Array.buffer
+          ])
           cb(myUInt8Array.byteLength)
         },
-        output => {
-          if (typeof output === 'number') {
+        onMessage: output => {
+          if (
+            typeof output === 'number'
+          ) {
             workerContextByteLength = output
             done()
           } else {
-            uiContextByteLength = output.byteLength
+            uiContextByteLength =
+              output.byteLength
           }
         }
-      )
+      })
       transferWorker.postMessage(1)
     })
 
     it('UI context byteLength should be greater than zero', function() {
-      expect(uiContextByteLength).toBeGreaterThan(0)
+      expect(
+        uiContextByteLength
+      ).toBeGreaterThan(0)
     })
 
     it('Worker context byteLength should be zero', function() {
-      expect(workerContextByteLength).toBe(0)
+      expect(
+        workerContextByteLength
+      ).toBe(0)
     })
   })
 })

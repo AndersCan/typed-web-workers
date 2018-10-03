@@ -1,47 +1,107 @@
-export type Transfer = (ArrayBuffer | MessagePort | ImageBitmap)[]
+export type Transfer = Array<
+  | ArrayBuffer
+  | MessagePort
+  | ImageBitmap
+>
 
 export interface ITypedWorker<In, Out> {
   terminate: () => void
-  onMessage: (output: Out) => void
-  postMessage: (workerMessage: In, transfer?: Transfer) => void
+  postMessage: (
+    workerMessage: In,
+    transfer?: Transfer
+  ) => void
 }
 
-export function createWorker<In, Out>(
-  workerFunction: (
-    input: In,
-    cb: (_: Out, transfer?: Transfer) => void
-  ) => void,
-  onMessage = (output: Out) => {}
-): ITypedWorker<In, Out> {
-  return new TypedWorker(workerFunction, onMessage)
+export type WorkerFunction<In, Out> = (
+  input: In,
+  cb: (
+    _: Out,
+    transfer?: Transfer
+  ) => void
+) => void
+
+export interface ICreateWorkerProps<
+  In,
+  Out
+> {
+  workerFunction: WorkerFunction<
+    In,
+    Out
+  >
+  onMessage?: (output: Out) => void
+  onError?: (error: ErrorEvent) => void
+  importScripts?: string[]
 }
 
-class TypedWorker<In, Out> implements ITypedWorker<In, Out> {
+export function createWorker<In, Out>({
+  workerFunction,
+  onMessage,
+  importScripts,
+  onError
+}: ICreateWorkerProps<
+  In,
+  Out
+>): ITypedWorker<In, Out> {
+  return new TypedWorker(
+    workerFunction,
+    onMessage,
+    importScripts,
+    onError
+  )
+}
+
+class TypedWorker<In, Out>
+  implements ITypedWorker<In, Out> {
   private _nativeWorker: Worker
 
   constructor(
-    private readonly workerFunction: (
-      input: In,
-      cb: (_: Out, transfer?: Transfer) => void
-    ) => void,
-    public onMessage = (output: Out) => {}
+    workerFunction: WorkerFunction<
+      In,
+      Out
+    >,
+    onMessage = (output: Out) => {},
+    importScriptsUris: string[] = [],
+    onError = (error: ErrorEvent) => {}
   ) {
+    const joinedImportScripts = importScriptsUris
+      .map(v => `'${v}'`)
+      .join(',')
+    const importScriptsString = `importScripts(${joinedImportScripts})`
     const postMessage = `(${workerFunction}).call(this, e.data, postMessage)`
-    const workerFile = `self.onmessage=function(e){${postMessage}}`
-    const blob = new Blob([workerFile], { type: 'application/javascript' })
+    const workerFile = `
+    ${importScriptsString};
+    self.onmessage=function(e){${postMessage}};
+    `
+    const blob = new Blob(
+      [workerFile],
+      { type: 'application/javascript' }
+    )
 
-    this._nativeWorker = new Worker(URL.createObjectURL(blob))
+    this._nativeWorker = new Worker(
+      URL.createObjectURL(blob)
+    )
 
-    this._nativeWorker.onmessage = (messageEvent: MessageEvent) => {
-      this.onMessage(messageEvent.data)
+    const handleOnMessage = (
+      messageEvent: MessageEvent
+    ) => {
+      onMessage(messageEvent.data)
     }
+    this._nativeWorker.onmessage = handleOnMessage
+
+    this._nativeWorker.onerror = onError
   }
   /**
    * Post message to worker for processing
    * @param workerMessage message to send to worker
    */
-  public postMessage(workerMessage: In, transfer?: Transfer): void {
-    this._nativeWorker.postMessage(workerMessage, transfer)
+  public postMessage(
+    workerMessage: In,
+    transfer?: Transfer
+  ): void {
+    this._nativeWorker.postMessage(
+      workerMessage,
+      transfer
+    )
   }
 
   public terminate(): void {

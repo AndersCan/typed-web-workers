@@ -1,5 +1,15 @@
 # Upgrade guide
 
+## v2 -> v3(next)
+`createWorker` now takes named parameters of type `ICreateWorkerProps`. Only workerFunction is required
+
+createWorker({
+  workerFunction: (input, cb) => {...},
+  onMessage: output => {...}
+})
+
+`ICreateWorkerProps` also contains `importScripts` and `onError`
+
 ## v1 -> v2
 
 We no longer export the TypedWorker class as it allowes end-users to extends the class with their own methods.

@@ -10,7 +10,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 install:
-  - npm install --dev
+  - yarn
 script:
   - ./node_modules/.bin/karma start --browsers Firefox --single-run
 after_success:

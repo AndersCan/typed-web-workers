@@ -1,2 +1,2 @@
-import { createWorker, ITypedWorker } from './TypedWorker';
-export { createWorker, ITypedWorker };
+import { createWorker, ITypedWorker, ICreateWorkerProps } from './TypedWorker';
+export { createWorker, ITypedWorker, ICreateWorkerProps };

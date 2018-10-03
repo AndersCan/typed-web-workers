@@ -1,24 +1,37 @@
-import { createWorker, ITypedWorker } from '../src/index'
+import {
+  createWorker,
+  ITypedWorker
+} from '../src/index'
 
-const range = n => Array.from({ length: n }, (value, key) => key)
+const range = n =>
+  Array.from(
+    { length: n },
+    (value, key) => key
+  )
 
 describe('TypedWorker', function() {
   describe('basic message passing', () => {
     let result: number
 
     beforeEach(function(done) {
-      const numberWorker: ITypedWorker<number, number> = createWorker(
-        (input, cb) => cb(1000),
-        output => {
+      const numberWorker: ITypedWorker<
+        number,
+        number
+      > = createWorker({
+        workerFunction: (input, cb) =>
+          cb(1000),
+        onMessage: output => {
           result = output
           done()
         }
-      )
+      })
       numberWorker.postMessage(1)
     })
 
     it('returns the correct type', function() {
-      expect(result).toEqual(jasmine.any(Number))
+      expect(result).toEqual(
+        jasmine.any(Number)
+      )
     })
 
     it('returns the correct value', function() {
@@ -27,19 +40,29 @@ describe('TypedWorker', function() {
   })
 
   describe('simple cb with object', () => {
-    let objectWorker: ITypedWorker<{ a: number }, { b: number }>
+    let objectWorker: ITypedWorker<
+      { a: number },
+      { b: number }
+    >
     let result = {}
     beforeEach(done => {
-      objectWorker = createWorker(
-        (input: { a: number }, cb) => {
+      objectWorker = createWorker({
+        workerFunction: (
+          input: { a: number },
+          cb
+        ) => {
           cb({ b: input.a })
         },
-        (output: { b: number }) => {
+        onMessage: (output: {
+          b: number
+        }) => {
           result = output
           done()
         }
-      )
-      objectWorker.postMessage({ a: 10 })
+      })
+      objectWorker.postMessage({
+        a: 10
+      })
     })
 
     it('simple object return', function() {
@@ -54,65 +77,92 @@ describe('TypedWorker', function() {
       const numberRangeSmall = range(10)
 
       beforeEach(function(done) {
-        const numberWorker: ITypedWorker<number, number> = createWorker(
-          (input, cb) => cb(input),
-          output => {
+        const numberWorker: ITypedWorker<
+          number,
+          number
+        > = createWorker({
+          workerFunction: (input, cb) =>
+            cb(input),
+          onMessage: output => {
             result += output
             msgCountDown--
             if (msgCountDown === 0) {
               done()
             }
           }
+        })
+        numberRangeSmall.forEach(n =>
+          numberWorker.postMessage(n)
         )
-        numberRangeSmall.forEach(n => numberWorker.postMessage(n))
       })
 
       it('returns correct result after adding numberRangeSmall', function() {
-        const expected = numberRangeSmall.reduce((c, p) => c + p)
+        const expected = numberRangeSmall.reduce(
+          (c, p) => c + p
+        )
         expect(result).toEqual(expected)
       })
     })
 
     describe('large message count', () => {
-      const numberRangeLarge = range(10000)
+      const numberRangeLarge = range(
+        10000
+      )
       let result = 0
-      let msgCountDown = numberRangeLarge.length
+      let msgCountDown =
+        numberRangeLarge.length
 
       beforeEach(function(done) {
-        const numberWorker: ITypedWorker<number, number> = createWorker(
-          (input, cb) => cb(input),
-          output => {
+        const numberWorker: ITypedWorker<
+          number,
+          number
+        > = createWorker({
+          workerFunction: (input, cb) =>
+            cb(input),
+          onMessage: output => {
             result += output
             msgCountDown--
             if (msgCountDown === 0) {
               done()
             }
           }
+        })
+        numberRangeLarge.forEach(n =>
+          numberWorker.postMessage(n)
         )
-        numberRangeLarge.forEach(n => numberWorker.postMessage(n))
       }, 5000)
 
       it('returns correct result after adding numberRangeLarge', function() {
-        const expected = numberRangeLarge.reduce((c, p) => c + p)
+        const expected = numberRangeLarge.reduce(
+          (c, p) => c + p
+        )
         expect(result).toEqual(expected)
       })
     })
     describe('correct order', () => {
-      let multiReponse: ITypedWorker<number, number>
+      let multiReponse: ITypedWorker<
+        number,
+        number
+      >
       let result: number[] = []
       beforeEach(done => {
         result = []
-        multiReponse = createWorker(
-          (input: number, cb) => {
+        multiReponse = createWorker({
+          workerFunction: (
+            input: number,
+            cb
+          ) => {
             cb(input)
           },
-          (output: number) => {
+          onMessage: (
+            output: number
+          ) => {
             result.push(output)
             if (output === 3) {
               done()
             }
           }
-        )
+        })
         multiReponse.postMessage(1)
         multiReponse.postMessage(2)
         multiReponse.postMessage(3)
@@ -123,7 +173,11 @@ describe('TypedWorker', function() {
       })
 
       it('order is correct', function() {
-        expect(result).toEqual([1, 2, 3])
+        expect(result).toEqual([
+          1,
+          2,
+          3
+        ])
       })
     })
   })
@@ -131,28 +185,47 @@ describe('TypedWorker', function() {
   describe('handles large input', () => {
     let result
     beforeEach(function(done) {
-      const numberWorker: ITypedWorker<number[], number[]> = createWorker(
-        (input: number[], cb) => cb(input),
-        output => {
-          result = output.reduce((c, p) => c + p)
+      const numberWorker: ITypedWorker<
+        number[],
+        number[]
+      > = createWorker({
+        workerFunction: (
+          input: number[],
+          cb
+        ) => cb(input),
+        onMessage: output => {
+          result = output.reduce(
+            (c, p) => c + p
+          )
           done()
         }
+      })
+      numberWorker.postMessage(
+        range(1000)
       )
-      numberWorker.postMessage(range(1000))
     })
 
     it('returns the correct value', function() {
-      const expected = range(1000).reduce((c, p) => c + p)
+      const expected = range(
+        1000
+      ).reduce((c, p) => c + p)
       expect(result).toEqual(expected)
     })
   })
 
   describe('Termination', () => {
     let msgCounter = 0
-    let numberWorker: ITypedWorker<number, number>
-    numberWorker = createWorker((input: number) => {
-      msgCounter += 1
-      return input
+    let numberWorker: ITypedWorker<
+      number,
+      number
+    >
+    numberWorker = createWorker({
+      workerFunction: (
+        input: number
+      ) => {
+        msgCounter += 1
+        return input
+      }
     })
 
     it('stops handling messages', function() {
@@ -164,18 +237,24 @@ describe('TypedWorker', function() {
 
   describe('Termination', () => {
     let msgCounter = 0
-    let numberWorker: ITypedWorker<number, number>
+    let numberWorker: ITypedWorker<
+      number,
+      number
+    >
     beforeEach(done => {
-      numberWorker = createWorker(
-        (input: number, cb) => {
+      numberWorker = createWorker({
+        workerFunction: (
+          input: number,
+          cb
+        ) => {
           cb(input)
         },
-        output => {
+        onMessage: output => {
           numberWorker.terminate()
           msgCounter = output
           setTimeout(done, 500)
         }
-      )
+      })
       numberWorker.postMessage(1)
       numberWorker.postMessage(2)
     })
