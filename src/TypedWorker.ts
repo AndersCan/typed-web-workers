@@ -6,6 +6,7 @@ export type Transfer = Array<
 
 export interface ITypedWorker<In, Out> {
   terminate: () => void
+  onMessage: (output: Out) => void
   postMessage: (
     workerMessage: In,
     transfer?: Transfer
@@ -59,7 +60,7 @@ class TypedWorker<In, Out>
       In,
       Out
     >,
-    onMessage = (output: Out) => {},
+    public onMessage = (_: Out) => {},
     importScriptsUris: string[] = [],
     onError = (error: ErrorEvent) => {}
   ) {

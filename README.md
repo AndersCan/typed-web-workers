@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.org/AndersCan/typed-web-workers.svg?branch=master)](https://travis-ci.org/AndersCan/typed-web-workers)[![codecov](https://codecov.io/gh/AndersCan/typed-web-workers/branch/master/graph/badge.svg)](https://codecov.io/gh/AndersCan/typed-web-workers)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Library that help you get quickly up and running with web workers in either TypeScript or JavaScript projects.
+Library that help you get quickly up and running with web workers in either **TypeScript** or **JavaScript** projects.
+
+> ❗️❗️❗️ The `workerFunction` is executed in an **isolated context**. In can not rely on its surrounding context. Use `importScripts` if you need something added to the worker context
 
 # Installation
 `npm i typed-web-workers -S`
@@ -11,52 +13,76 @@ or
 
 `yarn add typed-web-workers`
 
-# Motivation
-We want TypeScript to catch as many errors as possible during compilation. We also want to have code completion so we can be more effective. To solve these issues when working with native web workers, we have created a `TypedWorker`.
+# tl;dr
+
+```javascript
+import { createWorker } from 'typed-web-workers'
+
+const worker = createWorker({
+  workerFunction: (input, callback) => callback(input * 2)),
+  onMessage: result => console.log(`Worker returned: ${result}`),
+  onError: error => console.log(`unhandled exception in Worker`)
+  importScripts: ['www.unpkg.com/moment@2.22.2/min/moment.min.js']
+})
+worker.postMessage(1)
+worker.postMessage(2)
+// log: Worker returned: 2
+// log: Worker returned: 4
+```
+Only `workerFunction` is required by `createWorker`
+
+## Motivation for Web Workers
+- avoid blocking the main thread with long running tasks
+
+When the main thread is blocked, the UI will be unresponsive to user events.
+
+> **Note** Using a web worker does not make a function run _faster_.
+
+## Motivation for Typed Web Workers
+- a fully typesafe web worker
+- quickly created
+- all of the benefits of a _native_ web worker
+
 
 # How does it work?
-Simply put, a TypedWorker is a wrapper for using a normal web worker. The benefit of using this wrapper is that it gives us typed inputs and outputs. Lets look at a small example to help illustrate this.
+In short, `createWorker`:
+1. Converts your `workerFunction` to a string
+2. Creates a new _native_ Worker using this string (by using Blob)
+3. returns a instance of a `TypedWorker` that acts as a wrapper to the _native_ worker.
 
-## Import
-We first need to import a `createWorker` into our file. (Optionally you can also include the worker interface `ITypedWorker`)
+Check the source code of `TypedWorker.ts` if you want more information.
 
-`import { createWorker, ITypedWorker } from 'typed-web-workers'`
+# Usage
+We first need to import `createWorker` into our file. (Optionally you can also include the worker interface `ITypedWorker`)
+
+`import { createWorker } from 'typed-web-workers'`
 
 Side-note: Some people dislike prefixing TS interfaces with an `I`. I Have opted to use it as it makes it explicit that this is an interface and not a class.
 
-## Sum of two numbers
+## Define the input
 ```javascript
-// Let us first define the `input` type for our Worker.
-// In our simple example we are going to create a 'Values' interface.
-interface Values {
+interface MyInput {
   x: number
   y: number
 }
-// Now we need to define the function that the worker will perform when it
-// receives a message of type `Values`.
-// We would expect it to look something like this
-function workFn(input: Values): number {
-  return input.x + input.y
-}
-
-// However, as there are many use cases for when we would like to return
-// multiple results from a single input or return results asynchronous.
-// We have to modify our `workFn`.
-// We will, basically, replace `return` with a function call.
-function workFn(input: Values, callback: (_: number) => void): void {
+```
+## Define the workerFunction
+```javascript
+const workerFunction = (input: MyInput, callback: (_: number) => void)) => {
   callback(input.x + input.y)
 }
-
-
-// Now that our worker has calculated the sum of x and y, we should to do
-// something with. Lets create a function that just logs the result.
-// We could also call this function the `outputFn` or `handleResultFn`
-function logFn(result: number) {
+```
+## Define what should happen when we receive a message
+```javascript
+const onMessage = (result: number)=> {
   console.log(`We received this response from the worker: ${result}`)
 }
 
 // Lets put this all together and create our TypedWebWorker.
-const typedWorker: ITypedWorker<Values, number> = createWorker(workFn, logFn)
+const typedWorker: ITypedWorker<MyInput, number> = createWorker({
+  workerFunction,
+  onMessage
+})
 
 // Thats it! The Worker is now ready to process messages of type 'Values'
 // and log the results to the console.
@@ -64,60 +90,75 @@ typedWorker.postMessage({ x: 5, y: 5 }) // logs: "10"
 typedWorker.postMessage({ x: 0, y: 0 }) // logs: "0"
 
 // You will get a compilation error if you try sending something other than a
-// `Values` object.
+// `MyInput` object.
 typedWorker.postMessage({ x: 5, y: 5, z: 5}) // this line will not compile
 typedWorker.postMessage("{ x: 5, y: 5}") // this line will not compile
 
 ```
-You now have a type safe web worker that can sum numbers!
 
 We could also write this example *much* shorter and still have the exact same type safety.
+
 ```javascript
-const typedWorker = createWorker(
-  (input: { x: number, y: number }, cb: (_: number) => void) => cb(input.x + input.y),
-  (result) => console.log(result)
-)
-```
-If we are explicit with the type of `typedWorker`, we can have much shorter function signatures.
-```javascript
-const typedWorker: ITypedWorker<{ x: number, y: number }, number> = createWorker(
-  (input, cb) => cb(input.x + input.y),
-  (result) => console.log(result)
-)
+const typedWorker: ITypedWorker<MyInput, number> = createWorker({
+  workerFunction: (input, cb) => cb(input.x + input.y),
+  onMessage: (result) => console.log(result)
+})
 ```
 
-Also, if we do not want to log the result, we can just ommit the second function as it is optional.
+Also, if we do not want to log the result, we can just ommit `onMessage` as it is optional
 
-In case you were unsure, you can use this in a JavaScript project just as easily, just ommit the TS types.
-```javascript
-const typedWorker = createWorker(
-  (input, cb) => cb(input.x + input.y),
-  (result) => console.log(result)
-)
-typedWorker.postMessage({ x: 5, y: 5 }) // logs: "10"
+# Worker Scope
+The `workerFunction` that we give our worker can **only** use the data provided from the `input` variable.
+It does not have access to any state, variables or functions (except those from `importScripts`).
 
-```
-### Things to note
-The `workFn` that we give our worker can only use the data provided from the `input` variable.
-It does not have access to any state other that the `input`.
 ```javascript
 const results = []
-function workFn(input: Values, cb): number {
+function workerFunction(input: Values, cb) {
   results.push(input.x + input.y) // this would not work
 }
 ```
-The reason why this would not work is because the two variables are not in the same context.
+The reason why this would not work is because the two variables are not in the same context/thread.
+
 ```javascript
 const results = [] // main context
 function workFn(input: Values): number {
   results.push(input.x + input.y) // Worker context
 }
 ```
-If you wish to add the results to an array, do it in the `Output` function.
+
+If you wish to add the results to an array, do it in the `onMessage` function.
 ```javascript
 const results = []
 const typedWorker = createWorker(
-  (input: { x: number, y: number }, cb) => cb(input.x + input.y),
+  (input: MyInput, cb) => cb(input.x + input.y),
   (result) => results.push(results)
 )
 ```
+
+## import external scripts with `importScripts`
+ Use `importScripts` with great care and **avoid** it if you can. (mdn docs)[https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/importScripts].
+
+### Example
+If you want to use `moment` in your worker:
+
+```javascript
+declare const moment: Moment // declare it here so we can use it in the workerFunction
+const momentWorker = createWorker({
+  workerFunction: (input,cb) => moment(input).format('YYYY'),
+  importScripts: [
+    'https://unpkg.com/moment@2.22.2/min/moment.min.js'
+  ]
+})
+```
+The provided URIs in `importScripts` must link to a JavaScript file that can be loaded by the Worker at runtime. The scripts must be CommonJs/umd as Workers do not support ES modules.
+
+If something goes wrong during the import an exception will be thrown and `onError` will be called. If this happens, you can assume the worker is no longer responsive.
+
+### Using local files
+> How you solve this depends on how you build and deploy your project
+> It is most likely a hassle to setup
+> I would try to avoid it if possible
+
+You must edit your build config if you wish to import local files. You will need to publish your script to a URL that your Worker can access. For example "www.mypage.com/public/my-script.js".
+
+In WebPack you will have to create a new EntryPoint that compiles your script into a CommonJs/UMD file.
