@@ -64,11 +64,19 @@ class TypedWorker<In, Out>
     importScriptsUris: string[] = [],
     onError = (error: ErrorEvent) => {}
   ) {
-    const joinedImportScripts = importScriptsUris
-      .map(v => `'${v}'`)
-      .join(',')
-    const importScriptsString = `importScripts(${joinedImportScripts})`
+    const hasImportScripts =
+      importScriptsUris.length !== 0
+    const joinedImportScripts = hasImportScripts
+      ? importScriptsUris
+          .map(v => `'${v}'`)
+          .join(',')
+      : ''
+
+    const importScriptsString = hasImportScripts
+      ? `importScripts(${joinedImportScripts})`
+      : ''
     const postMessage = `(${workerFunction}).call(this, e.data, postMessage)`
+
     const workerFile = `
     ${importScriptsString};
     self.onmessage=function(e){${postMessage}};

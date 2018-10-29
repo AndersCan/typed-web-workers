@@ -6,7 +6,8 @@
   "typings": "lib/index",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "tsc -p .",
+    "build": "rimraf lib/ && tsc -p . && npm run build:umd",
+    "build:umd": "tsc -p . --module umd --outDir lib/umd",
     "test": "karma start karma.conf.js",
     "lint": "prettier \"./{src,test}/**.ts\" --write"
   },
@@ -16,7 +17,7 @@
     "typescript"
   ],
   "author": "anderscan",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jasmine": "2.8.8",
     "codecov": "3.1.0",
@@ -30,6 +31,7 @@
     "karma-spec-reporter": "0.0.32",
     "karma-typescript": "3.0.4",
     "prettier": "1.14.3",
+    "rimraf": "^2.6.2",
     "typescript": "3.1.1"
   },
   "repository": "AndersCan/typed-web-workers"
