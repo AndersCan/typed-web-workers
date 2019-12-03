@@ -1,7 +1,7 @@
 import {
   createWorker,
   ITypedWorker
-} from '../index'
+} from '../src/index'
 
 describe('try/catch handling', function() {
   describe('try/catch - success', () => {

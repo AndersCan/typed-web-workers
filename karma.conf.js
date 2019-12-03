@@ -8,7 +8,8 @@ module.exports = function(config) {
       'karma-typescript'
     ],
     files: [
-      'src/**/*.ts' // *.tsx for React Jsx
+      'src/**/*.ts',
+      'tests/**/*.ts'
     ],
     preprocessors: {
       '**/*.ts': 'karma-typescript'

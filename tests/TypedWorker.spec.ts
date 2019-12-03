@@ -1,7 +1,7 @@
 import {
   createWorker,
   ITypedWorker
-} from '../index'
+} from '../src/index'
 
 const range = (n: number) =>
   Array.from(

@@ -1,5 +1,5 @@
-import { createWorker } from '../../index'
-import { ICreateWorkerProps } from '../../TypedWorker'
+import { createWorker } from '../../src/index'
+import { ICreateWorkerProps } from '../../src/TypedWorker'
 
 declare const moment: any
 describe('importScript', function() {
