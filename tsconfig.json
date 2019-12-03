@@ -5,7 +5,7 @@
     "outDir": "lib",
     "module": "commonjs",
     "skipLibCheck": true,
-    "target": "es3"
+    "target": "es6"
   },
   "include": [
     "src"

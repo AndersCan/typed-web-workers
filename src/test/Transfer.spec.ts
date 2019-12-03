@@ -1,7 +1,7 @@
 import {
   createWorker,
   ITypedWorker
-} from '../src/index'
+} from '../index'
 
 describe('TypedWorker - transfer', function() {
   describe('can transfer ownership from UI to worker', () => {

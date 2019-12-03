@@ -1,9 +1,9 @@
 import {
   createWorker,
   ITypedWorker
-} from '../src/index'
+} from '../index'
 
-const range = n =>
+const range = (n: number) =>
   Array.from(
     { length: n },
     (value, key) => key
