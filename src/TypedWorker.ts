@@ -1,15 +1,14 @@
-export type Transfer = Array<
-  | ArrayBuffer
-  | MessagePort
-  | ImageBitmap
->
+/**
+ * @deprecated TypeScript now contains Transferable
+ */
+export type Transfer = Transferable[]
 
 export interface ITypedWorker<In, Out> {
   terminate: () => void
   onMessage: (output: Out) => void
   postMessage: (
     workerMessage: In,
-    transfer?: Transfer
+    transfer?: Transferable[]
   ) => void
 }
 
@@ -17,7 +16,7 @@ export type WorkerFunction<In, Out> = (
   input: In,
   cb: (
     _: Out,
-    transfer?: Transfer
+    transfer?: Transferable[]
   ) => void
 ) => void
 
@@ -105,12 +104,18 @@ class TypedWorker<In, Out>
    */
   public postMessage(
     workerMessage: In,
-    transfer?: Transfer
+    transfer?: Transferable[]
   ): void {
-    this._nativeWorker.postMessage(
-      workerMessage,
-      transfer
-    )
+    if (transfer) {
+      this._nativeWorker.postMessage(
+        workerMessage,
+        transfer
+      )
+    } else {
+      this._nativeWorker.postMessage(
+        workerMessage
+      )
+    }
   }
 
   public terminate(): void {
