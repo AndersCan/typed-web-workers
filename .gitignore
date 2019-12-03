@@ -1,6 +1,7 @@
 index.html
 webpack.config.js
 bundle.js
+lib/
 
 # Logs
 logs
