@@ -9,6 +9,7 @@
     "build": "rimraf lib/ && tsc -p . && npm run build:umd",
     "build:umd": "tsc -p . --module umd --outDir lib/umd",
     "test": "karma start karma.conf.js",
+    "test:headless": "HEADLESS=true karma start karma.conf.js",
     "lint": "prettier \"./{src,test}/**.ts\" --write"
   },
   "keywords": [
@@ -24,7 +25,7 @@
     "jasmine": "3.5.0",
     "jasmine-core": "3.5.0",
     "karma": "4.4.1",
-    "karma-chrome-launcher": "3.1.0",
+    "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "2.0.1",
     "karma-firefox-launcher": "1.2.0",
     "karma-jasmine": "2.0.1",

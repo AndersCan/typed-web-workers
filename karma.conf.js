@@ -2,7 +2,23 @@
 // Generated on Fri Apr 28 2017 20:17:45 GMT+0200 (Romance Daylight Time)
 
 module.exports = function(config) {
+  const isHeadless = !!process.env
+    .HEADLESS
+
+  const browsers = isHeadless
+    ? [
+        'ChromeHeadless',
+        'FirefoxHeadless'
+      ]
+    : ['Chrome', 'Firefox']
+
   config.set({
+    customLaunchers: {
+      FirefoxHeadless: {
+        base: 'Firefox',
+        flags: ['-headless']
+      }
+    },
     frameworks: [
       'jasmine',
       'karma-typescript'
@@ -41,7 +57,7 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
-    browsers: ['Chrome', 'Firefox'],
+    browsers,
     // // Continuous Integration mode
     // // if true, Karma captures browsers, runs the tests and exits
     singleRun: true
