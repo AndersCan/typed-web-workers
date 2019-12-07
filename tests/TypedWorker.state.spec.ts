@@ -4,7 +4,7 @@ import * as fc from 'fast-check'
 
 describe('TypedWorker with state', function() {
   describe('basic state', () => {
-    it('returns the correct type', async function() {
+    it('can save [1, 2, 3]', async function() {
       let input = [1, 2, 3]
       const output = await PromiseWorker(
         input
@@ -12,7 +12,7 @@ describe('TypedWorker with state', function() {
       expect(output).toEqual(input)
     })
 
-    it('returns the correct obj type', async function() {
+    it('can save { a: [1, 2, 3] }', async function() {
       let input = { a: [1, 2, 3] }
       const output = await PromiseWorker(
         input
@@ -20,8 +20,8 @@ describe('TypedWorker with state', function() {
       expect(output).toEqual(input)
     })
 
-    it('returns the correct obj type', async function() {
-      fc.assert(
+    it('can save anything', async function() {
+      return fc.assert(
         fc.asyncProperty(
           fc.anything(),
           async (anything: any) => {
@@ -34,23 +34,25 @@ describe('TypedWorker with state', function() {
             )
           }
         ),
-        { numRuns: 1000 }
+        { numRuns: 10000 }
       )
     })
   })
 })
 
+const fn = function fn(
+  input,
+  cb,
+  getState,
+  setState
+) {
+  setState(input)
+  cb(getState())
+}
+
 const results = []
 const internalWorker = createWorker({
-  workerFunction: (
-    input,
-    cb,
-    getState,
-    setState
-  ) => {
-    setState(input)
-    cb(getState())
-  },
+  workerFunction: fn,
   onMessage: ({ id, input }) => {
     results[id](input)
   }
