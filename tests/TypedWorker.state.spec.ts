@@ -20,23 +20,27 @@ describe('TypedWorker with state', function() {
       expect(output).toEqual(input)
     })
 
-    it('can save anything', async function() {
-      return fc.assert(
-        fc.asyncProperty(
-          fc.anything(),
-          async (anything: any) => {
-            let input = anything
-            const output = await PromiseWorker(
-              input
-            )
-            expect(input).toEqual(
-              output
-            )
-          }
-        ),
-        { numRuns: 10000 }
-      )
-    })
+    it(
+      'can save anything',
+      async function() {
+        return fc.assert(
+          fc.asyncProperty(
+            fc.anything(),
+            async (anything: any) => {
+              let input = anything
+              const output = await PromiseWorker(
+                input
+              )
+              expect(input).toEqual(
+                output
+              )
+            }
+          ),
+          { numRuns: 10000 }
+        )
+      },
+      10 * 1000 // 10s
+    )
   })
 })
 

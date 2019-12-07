@@ -1,8 +1,7 @@
 # typed-web-workers
-[![codecov](https://codecov.io/gh/AndersCan/typed-web-workers/branch/master/graph/badge.svg)](https://codecov.io/gh/AndersCan/typed-web-workers)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Library that help you get quickly up and running with web workers in either **TypeScript** or **JavaScript** projects.
+Library that help you get quickly up and running with web workers in **TypeScript** or **JavaScript** projects.
 
 > ❗️❗️❗️ The `workerFunction` is executed in an **isolated context**. It can not rely on its surrounding context. Use `importScripts` if you need something added to the worker context
 
