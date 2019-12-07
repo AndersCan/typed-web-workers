@@ -5,6 +5,8 @@ module.exports = function(config) {
   const isHeadless = !!process.env
     .HEADLESS
 
+  const isDev = !!process.env.DEV
+
   const browsers = isHeadless
     ? [
         'ChromeHeadless',
@@ -44,11 +46,6 @@ module.exports = function(config) {
       'coverage'
     ],
 
-    // coverageReporter: {
-    //   type: 'lcov',
-    //   dir: 'coverage/',
-    //   subdir: '.'
-    // }
     // enable / disable colors in the output (reporters and logs)
     colors: true,
 
@@ -60,6 +57,6 @@ module.exports = function(config) {
     browsers,
     // // Continuous Integration mode
     // // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: !isDev
   })
 }

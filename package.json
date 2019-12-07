@@ -10,6 +10,7 @@
     "build:umd": "tsc -p . --module umd --outDir lib/umd",
     "test": "karma start karma.conf.js",
     "test:headless": "HEADLESS=true karma start karma.conf.js",
+    "test:dev": "HEADLESS=true DEV=true npm run test:headless",
     "lint": "prettier \"./{src,test}/**.ts\" --write"
   },
   "keywords": [
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@types/jasmine": "3.4.6",
     "codecov": "3.6.1",
+    "fast-check": "^1.20.0",
     "jasmine": "3.5.0",
     "jasmine-core": "3.5.0",
     "karma": "4.4.1",
