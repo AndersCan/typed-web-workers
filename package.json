@@ -6,8 +6,7 @@
   "typings": "lib/index",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "rimraf lib/ && tsc -p . && npm run build:umd",
-    "build:umd": "tsc -p . --module umd --outDir lib/umd",
+    "build": "rimraf lib/ && tsc -p .",
     "test": "karma start karma.conf.js",
     "test:headless": "HEADLESS=true karma start karma.conf.js",
     "test:dev": "HEADLESS=true DEV=true npm run test:headless",
