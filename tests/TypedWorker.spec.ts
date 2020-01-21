@@ -18,8 +18,10 @@ describe('TypedWorker', function() {
         number,
         number
       > = createWorker({
-        workerFunction: (input, cb) =>
-          cb(1000),
+        workerFunction: ({
+          input,
+          cb
+        }) => cb(1000),
         onMessage: output => {
           result = output
           done()
@@ -47,11 +49,11 @@ describe('TypedWorker', function() {
     let result = {}
     beforeEach(done => {
       objectWorker = createWorker({
-        workerFunction: (
-          input: { a: number },
+        workerFunction: ({
+          input: { a },
           cb
-        ) => {
-          cb({ b: input.a })
+        }) => {
+          cb({ b: a })
         },
         onMessage: (output: {
           b: number
@@ -81,8 +83,10 @@ describe('TypedWorker', function() {
           number,
           number
         > = createWorker({
-          workerFunction: (input, cb) =>
-            cb(input),
+          workerFunction: ({
+            input,
+            cb
+          }) => cb(input),
           onMessage: output => {
             result += output
             msgCountDown--
@@ -117,8 +121,10 @@ describe('TypedWorker', function() {
           number,
           number
         > = createWorker({
-          workerFunction: (input, cb) =>
-            cb(input),
+          workerFunction: ({
+            input,
+            cb
+          }) => cb(input),
           onMessage: output => {
             result += output
             msgCountDown--
@@ -148,10 +154,10 @@ describe('TypedWorker', function() {
       beforeEach(done => {
         result = []
         multiReponse = createWorker({
-          workerFunction: (
-            input: number,
+          workerFunction: ({
+            input,
             cb
-          ) => {
+          }) => {
             cb(input)
           },
           onMessage: (
@@ -189,10 +195,10 @@ describe('TypedWorker', function() {
         number[],
         number[]
       > = createWorker({
-        workerFunction: (
-          input: number[],
+        workerFunction: ({
+          input,
           cb
-        ) => cb(input),
+        }) => cb(input),
         onMessage: output => {
           result = output.reduce(
             (c, p) => c + p
@@ -220,11 +226,8 @@ describe('TypedWorker', function() {
       number
     >
     numberWorker = createWorker({
-      workerFunction: (
-        input: number
-      ) => {
+      workerFunction: () => {
         msgCounter += 1
-        return input
       }
     })
 
@@ -243,10 +246,10 @@ describe('TypedWorker', function() {
     >
     beforeEach(done => {
       numberWorker = createWorker({
-        workerFunction: (
-          input: number,
+        workerFunction: ({
+          input,
           cb
-        ) => {
+        }) => {
           cb(input)
         },
         onMessage: output => {

@@ -1,5 +1,7 @@
-import { createWorker } from '../../src/index'
-import { ICreateWorkerProps } from '../../src/TypedWorker'
+import {
+  createWorker,
+  ICreateWorkerProps
+} from '../../src/index'
 
 declare const moment: any
 describe('importScript', function() {
@@ -10,7 +12,10 @@ describe('importScript', function() {
       number,
       string
     > = {
-      workerFunction: (input, cb) => {
+      workerFunction: ({
+        input,
+        cb
+      }) => {
         cb(moment(input).format('YYYY'))
       },
       importScripts: [
@@ -55,7 +60,10 @@ describe('importScript', function() {
       string,
       string
     > = {
-      workerFunction: (input, cb) => {
+      workerFunction: ({
+        input,
+        cb
+      }) => {
         cb(input)
       },
       importScripts: [badImportURI]
@@ -96,7 +104,10 @@ describe('importScript', function() {
       number,
       string
     > = {
-      workerFunction: (input, cb) => {
+      workerFunction: ({
+        input,
+        cb
+      }) => {
         if (
           self['moment'] === undefined
         ) {

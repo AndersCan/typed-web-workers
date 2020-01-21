@@ -12,7 +12,10 @@ describe('try/catch handling', function() {
         string,
         string
       > = createWorker({
-        workerFunction: (input, cb) => {
+        workerFunction: ({
+          input,
+          cb
+        }) => {
           try {
             if (input === 'works')
               cb('ok')
@@ -48,7 +51,10 @@ describe('try/catch handling', function() {
         string,
         string
       > = createWorker({
-        workerFunction: (input, cb) => {
+        workerFunction: ({
+          input,
+          cb
+        }) => {
           try {
             if (input === 'works')
               cb('ok')

@@ -1,4 +1,7 @@
-import { createWorker } from '../src/index'
+import {
+  createWorker,
+  WorkerProps
+} from '../src/index'
 
 import * as fc from 'fast-check'
 
@@ -42,14 +45,39 @@ describe('TypedWorker with state', function() {
       10 * 1000 // 10s
     )
   })
+
+  it('getState and setState have correct types', async function(done) {
+    const state = createWorker<
+      number,
+      number,
+      number[]
+    >({
+      workerFunction: ({
+        input,
+        cb,
+        setState,
+        getState
+      }) => {
+        setState([input])
+        cb(getState()[0])
+      },
+      onMessage: output => {
+        expect(typeof output).toEqual(
+          'number'
+        )
+        done()
+      }
+    })
+    state.postMessage(1)
+  })
 })
 
-const fn = function fn(
-  input,
-  cb,
+const fn = function fn({
+  setState,
   getState,
-  setState
-) {
+  input,
+  cb
+}: WorkerProps<any, any, any>) {
   setState(input)
   cb(getState())
 }
@@ -57,17 +85,17 @@ const fn = function fn(
 const results = []
 const internalWorker = createWorker({
   workerFunction: fn,
-  onMessage: ({ id, input }) => {
-    results[id](input)
+  onMessage: props => {
+    results[props.id](props.input)
   }
 })
 const PromiseWorker = (input: any) => {
+  const id = results.length
   internalWorker.postMessage({
-    id: results.length,
+    id,
     input
   })
   return new Promise(
-    res =>
-      (results[results.length] = res)
+    res => (results[id] = res)
   )
 }

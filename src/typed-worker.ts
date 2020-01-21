@@ -1,8 +1,3 @@
-/**
- * @deprecated TypeScript now contains Transferable
- */
-export type Transfer = Transferable[]
-
 export interface ITypedWorker<In, Out> {
   terminate: () => void
   onMessage: (output: Out) => void
@@ -12,55 +7,34 @@ export interface ITypedWorker<In, Out> {
   ) => void
 }
 
-export type WorkerFunction<
-  In,
-  Out,
-  State = any
-> = (
-  input: In,
-  cb: (
-    _: Out,
-    transfer?: Transferable[]
-  ) => void,
-  getState?: () => State,
-  setState?: (newState: State) => State
-) => void
-
-export interface ICreateWorkerProps<
+export interface WorkerProps<
   In,
   Out,
   State = any
 > {
-  workerFunction: WorkerFunction<
-    In,
-    Out,
-    State
-  >
-  onMessage?: (output: Out) => void
-  onError?: (error: ErrorEvent) => void
-  importScripts?: string[]
+  input: In
+  cb: (
+    result: Out,
+    transfer?: Transferable[]
+  ) => void
+  getState: () => State
+  setState: (newState: State) => void
 }
 
-export function createWorker<In, Out>(
-  props: ICreateWorkerProps<In, Out>
-): ITypedWorker<In, Out> {
-  return new TypedWorker(
-    props.workerFunction,
-    props.onMessage,
-    props.importScripts,
-    props.onError
-  )
-}
-
-class TypedWorker<In, Out>
-  implements ITypedWorker<In, Out> {
+/**
+ * Do not use this.
+ */
+export class TypedWorker<
+  In,
+  Out,
+  State = any
+> implements ITypedWorker<In, Out> {
   private _nativeWorker: Worker
 
   constructor(
-    workerFunction: WorkerFunction<
-      In,
-      Out
-    >,
+    workerFunction: (
+      props: WorkerProps<In, Out, State>
+    ) => void,
     public onMessage = (_: Out) => {},
     importScriptsUris: string[] = [],
     onError = (error: ErrorEvent) => {}
@@ -71,7 +45,7 @@ class TypedWorker<In, Out>
     const importScriptsString = getImportScriptString(
       importScriptsUris
     )
-    const postMessage = `(${workerFunction}).call(this, e.data, postMessage, getState, setState)`
+    const postMessage = `(${workerFunction}).call(this, {input: e.data, cb: postMessage, getState: getState, setState: setState})`
 
     const workerFile = `
     ${importScriptsString};
