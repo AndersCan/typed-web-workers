@@ -1,11 +1,13 @@
 # Upgrade guide
 
-## v2 -> v3(next)
-`createWorker` now takes named parameters of type `ICreateWorkerProps`.
+## v2 -> v3
+`createWorker`: now takes named parameters of type `ICreateWorkerProps`.
+`workerFunction`: added `getState` and `setState` parmas.
+`workerFunction`: now takes named parameters: `{input, callback, getState, setState}`
 
 ```javascript
 createWorker({
-  workerFunction: (input, cb) => {...},
+  workerFunction: ({input, callback, getState, setState}) => {...},
   onMessage: output => {...},
   onError: error => {...},
   importScripts: ['https://www.url.to/your/script.js']

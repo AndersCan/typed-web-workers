@@ -1,16 +1,5 @@
-import {
-  ITypedWorker,
-  WorkerProps
-} from './typed-worker'
+import { ITypedWorker, WorkerFunctionProps } from './typed-worker'
 
-import {
-  createWorker,
-  ICreateWorkerProps
-} from './create-worker'
+import { createWorker, ICreateWorkerProps } from './create-worker'
 
-export {
-  createWorker,
-  ITypedWorker,
-  ICreateWorkerProps,
-  WorkerProps
-}
+export { createWorker, ITypedWorker, ICreateWorkerProps, WorkerFunctionProps }

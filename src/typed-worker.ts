@@ -1,51 +1,37 @@
-export interface ITypedWorker<In, Out> {
+export interface ITypedWorker<Input, Output> {
   terminate: () => void
-  onMessage: (output: Out) => void
-  postMessage: (
-    workerMessage: In,
-    transfer?: Transferable[]
-  ) => void
+  onMessage: (output: Output) => void
+  postMessage: (workerMessage: Input, transfer?: Transferable[]) => void
 }
 
-export interface WorkerProps<
-  In,
-  Out,
-  State = any
-> {
-  input: In
-  cb: (
-    result: Out,
-    transfer?: Transferable[]
-  ) => void
-  getState: () => State
+/**
+ * Props that will be pased to your worker function
+ */
+export interface WorkerFunctionProps<Input, Output, State = any> {
+  input: Input
+  callback: (result: Output, transfer?: Transferable[]) => void
+  getState: () => State | undefined
   setState: (newState: State) => void
 }
 
 /**
- * Do not use this.
+ * Do not use this directly. Prefer importing `createWorker`
  */
-export class TypedWorker<
-  In,
-  Out,
-  State = any
-> implements ITypedWorker<In, Out> {
+export class TypedWorker<Input, Output, State = any>
+  implements ITypedWorker<Input, Output> {
   private _nativeWorker: Worker
 
   constructor(
-    workerFunction: (
-      props: WorkerProps<In, Out, State>
-    ) => void,
-    public onMessage = (_: Out) => {},
+    workerFunction: (props: WorkerFunctionProps<Input, Output, State>) => void,
+    public onMessage = (_: Output) => {},
     importScriptsUris: string[] = [],
     onError = (error: ErrorEvent) => {}
   ) {
     const initialState = `var __state__ = undefined`
     const setState = `function setState(newState){__state__ = newState;}`
     const getState = `function getState(){return __state__;}`
-    const importScriptsString = getImportScriptString(
-      importScriptsUris
-    )
-    const postMessage = `(${workerFunction}).call(this, {input: e.data, cb: postMessage, getState: getState, setState: setState})`
+    const importScriptsString = getImportScriptString(importScriptsUris)
+    const postMessage = `(${workerFunction}).call(this, {input: e.data, callback: postMessage, getState: getState, setState: setState})`
 
     const workerFile = `
     ${importScriptsString};
@@ -54,18 +40,11 @@ export class TypedWorker<
     ${getState};
     self.onmessage=function(e){${postMessage}};
     `
-    const blob = new Blob(
-      [workerFile],
-      { type: 'application/javascript' }
-    )
+    const blob = new Blob([workerFile], { type: 'application/javascript' })
 
-    this._nativeWorker = new Worker(
-      URL.createObjectURL(blob)
-    )
+    this._nativeWorker = new Worker(URL.createObjectURL(blob))
 
-    const handleOnMessage = (
-      messageEvent: MessageEvent
-    ) => {
+    const handleOnMessage = (messageEvent: MessageEvent) => {
       this.onMessage(messageEvent.data)
     }
     this._nativeWorker.onmessage = handleOnMessage
@@ -76,19 +55,11 @@ export class TypedWorker<
    * Post message to worker for processing
    * @param workerMessage message to send to worker
    */
-  public postMessage(
-    workerMessage: In,
-    transfer?: Transferable[]
-  ): void {
+  public postMessage(workerMessage: Input, transfer?: Transferable[]): void {
     if (transfer) {
-      this._nativeWorker.postMessage(
-        workerMessage,
-        transfer
-      )
+      this._nativeWorker.postMessage(workerMessage, transfer)
     } else {
-      this._nativeWorker.postMessage(
-        workerMessage
-      )
+      this._nativeWorker.postMessage(workerMessage)
     }
   }
 
@@ -101,19 +72,14 @@ export class TypedWorker<
  * Creates a `importScripts[...]` string
  * @param importScriptsUris array of URI of scripts to import
  */
-function getImportScriptString(
-  importScriptsUris: string[]
-): string {
-  const hasImportScripts =
-    importScriptsUris.length !== 0
+function getImportScriptString(importScriptsUris: string[]): string {
+  const hasImportScripts = importScriptsUris.length !== 0
 
   if (!hasImportScripts) {
     return ''
   }
 
-  const joinedImportScripts = importScriptsUris
-    .map(v => `'${v}'`)
-    .join(',')
+  const joinedImportScripts = importScriptsUris.map(v => `'${v}'`).join(',')
   const importScriptsString = `importScripts(${joinedImportScripts})`
 
   return importScriptsString

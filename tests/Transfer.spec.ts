@@ -24,8 +24,8 @@ describe('TypedWorker - transfer', function() {
       > = createWorker({
         workerFunction: ({
           input,
-          cb
-        }) => cb(input.byteLength),
+          callback
+        }) => callback(input.byteLength),
         onMessage: output => {
           workerContextBytelength = output
           done()
@@ -62,7 +62,7 @@ describe('TypedWorker - transfer', function() {
       > = createWorker({
         workerFunction: ({
           input,
-          cb
+          callback
         }) => {
           const myUInt8Array = new Uint8Array(
             1024 * 1024 * 8
@@ -74,10 +74,10 @@ describe('TypedWorker - transfer', function() {
           ) {
             myUInt8Array[i] = i
           }
-          cb(myUInt8Array.buffer, [
+          callback(myUInt8Array.buffer, [
             myUInt8Array.buffer
           ])
-          cb(myUInt8Array.byteLength)
+          callback(myUInt8Array.byteLength)
         },
         onMessage: output => {
           if (

@@ -14,14 +14,14 @@ describe('try/catch handling', function() {
       > = createWorker({
         workerFunction: ({
           input,
-          cb
+          callback
         }) => {
           try {
             if (input === 'works')
-              cb('ok')
+              callback('ok')
             throw 'not ok'
           } catch (e) {
-            cb(e)
+            callback(e)
           }
         },
         onMessage: output => {
@@ -53,14 +53,14 @@ describe('try/catch handling', function() {
       > = createWorker({
         workerFunction: ({
           input,
-          cb
+          callback
         }) => {
           try {
             if (input === 'works')
-              cb('ok')
+              callback('ok')
             throw 'not ok'
           } catch (e) {
-            cb(e)
+            callback(e)
           }
         },
         onMessage: output => {

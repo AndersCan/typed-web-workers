@@ -14,9 +14,9 @@ describe('importScript', function() {
     > = {
       workerFunction: ({
         input,
-        cb
+        callback
       }) => {
-        cb(moment(input).format('YYYY'))
+        callback(moment(input).format('YYYY'))
       },
       importScripts: [
         'https://unpkg.com/moment@2.22.2/min/moment.min.js'
@@ -62,9 +62,9 @@ describe('importScript', function() {
     > = {
       workerFunction: ({
         input,
-        cb
+        callback
       }) => {
-        cb(input)
+        callback(input)
       },
       importScripts: [badImportURI]
     }
@@ -106,7 +106,7 @@ describe('importScript', function() {
     > = {
       workerFunction: ({
         input,
-        cb
+        callback
       }) => {
         if (
           self['moment'] === undefined
@@ -115,7 +115,7 @@ describe('importScript', function() {
             'https://unpkg.com/moment@2.22.2/min/moment.min.js'
           )
         }
-        cb(moment(input).format('YYYY'))
+        callback(moment(input).format('YYYY'))
       }
     }
 

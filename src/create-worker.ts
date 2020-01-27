@@ -1,38 +1,15 @@
-import {
-  WorkerProps,
-  TypedWorker
-} from './typed-worker'
-import { ITypedWorker } from '.'
+import { WorkerFunctionProps, TypedWorker, ITypedWorker } from './typed-worker'
 
-/**
- * @deprecated TypeScript now contains Transferable
- */
-export type Transfer = Transferable[]
-
-export interface ICreateWorkerProps<
-  In,
-  Out,
-  State = any
-> {
-  workerFunction: (
-    props: WorkerProps<In, Out, State>
-  ) => void
-  onMessage?: (output: Out) => void
+export interface ICreateWorkerProps<Input, Output, State = any> {
+  workerFunction: (props: WorkerFunctionProps<Input, Output, State>) => void
+  onMessage?: (output: Output) => void
   onError?: (error: ErrorEvent) => void
   importScripts?: string[]
 }
 
-export function createWorker<
-  In,
-  Out,
-  State = any
->(
-  props: ICreateWorkerProps<
-    In,
-    Out,
-    State
-  >
-): ITypedWorker<In, Out> {
+export function createWorker<Input, Output, State = any>(
+  props: ICreateWorkerProps<Input, Output, State>
+): ITypedWorker<Input, Output> {
   return new TypedWorker(
     props.workerFunction,
     props.onMessage,

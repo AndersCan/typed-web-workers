@@ -20,8 +20,8 @@ describe('TypedWorker', function() {
       > = createWorker({
         workerFunction: ({
           input,
-          cb
-        }) => cb(1000),
+          callback
+        }) => callback(1000),
         onMessage: output => {
           result = output
           done()
@@ -41,7 +41,7 @@ describe('TypedWorker', function() {
     })
   })
 
-  describe('simple cb with object', () => {
+  describe('simple callback with object', () => {
     let objectWorker: ITypedWorker<
       { a: number },
       { b: number }
@@ -51,9 +51,9 @@ describe('TypedWorker', function() {
       objectWorker = createWorker({
         workerFunction: ({
           input: { a },
-          cb
+          callback
         }) => {
-          cb({ b: a })
+          callback({ b: a })
         },
         onMessage: (output: {
           b: number
@@ -85,8 +85,8 @@ describe('TypedWorker', function() {
         > = createWorker({
           workerFunction: ({
             input,
-            cb
-          }) => cb(input),
+            callback
+          }) => callback(input),
           onMessage: output => {
             result += output
             msgCountDown--
@@ -123,8 +123,8 @@ describe('TypedWorker', function() {
         > = createWorker({
           workerFunction: ({
             input,
-            cb
-          }) => cb(input),
+            callback
+          }) => callback(input),
           onMessage: output => {
             result += output
             msgCountDown--
@@ -156,9 +156,9 @@ describe('TypedWorker', function() {
         multiReponse = createWorker({
           workerFunction: ({
             input,
-            cb
+            callback
           }) => {
-            cb(input)
+            callback(input)
           },
           onMessage: (
             output: number
@@ -197,8 +197,8 @@ describe('TypedWorker', function() {
       > = createWorker({
         workerFunction: ({
           input,
-          cb
-        }) => cb(input),
+          callback
+        }) => callback(input),
         onMessage: output => {
           result = output.reduce(
             (c, p) => c + p
@@ -248,9 +248,9 @@ describe('TypedWorker', function() {
       numberWorker = createWorker({
         workerFunction: ({
           input,
-          cb
+          callback
         }) => {
-          cb(input)
+          callback(input)
         },
         onMessage: output => {
           numberWorker.terminate()
