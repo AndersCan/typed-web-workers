@@ -1,13 +1,15 @@
 {
   "name": "typed-web-workers",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "description": "Create web workers with type safety",
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "tsc -p .",
+    "build": "rimraf lib/ && tsc -p .",
     "test": "karma start karma.conf.js",
+    "test:headless": "HEADLESS=true karma start karma.conf.js",
+    "test:dev": "HEADLESS=true DEV=true npm run test:headless",
     "lint": "prettier \"./{src,test}/**.ts\" --write"
   },
   "keywords": [
@@ -16,21 +18,23 @@
     "typescript"
   ],
   "author": "anderscan",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "@types/jasmine": "^2.5.47",
-    "codecov": "^2.3.0",
-    "jasmine": "^2.6.0",
-    "jasmine-core": "^2.6.1",
-    "karma": "^1.6.0",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-coverage": "^1.1.1",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-jasmine": "^1.1.0",
-    "karma-spec-reporter": "0.0.31",
-    "karma-typescript": "^3.0.1",
-    "prettier": "^1.7.4",
-    "typescript": "2.5.3"
+    "@types/jasmine": "3.4.6",
+    "codecov": "3.6.1",
+    "fast-check": "^1.20.0",
+    "jasmine": "3.5.0",
+    "jasmine-core": "3.5.0",
+    "karma": "4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "2.0.1",
+    "karma-firefox-launcher": "1.2.0",
+    "karma-jasmine": "2.0.1",
+    "karma-spec-reporter": "0.0.32",
+    "karma-typescript": "4.1.1",
+    "prettier": "1.19.1",
+    "rimraf": "^3.0.0",
+    "typescript": "3.7.2"
   },
   "repository": "AndersCan/typed-web-workers"
 }

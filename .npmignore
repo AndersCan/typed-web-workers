@@ -1,6 +1,8 @@
 coverage/
-test/
+tests/
 src/
+.github/
+.prettierrc
 karma.conf.js
 index.html
 tsconfig.json
