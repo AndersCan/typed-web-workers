@@ -5,7 +5,7 @@ export interface ITypedWorker<Input, Output> {
 }
 
 /**
- * Props that will be pased to your worker function
+ * Props that will be passed to your worker function
  */
 export interface WorkerFunctionProps<Input, Output, State = any> {
   input: Input
