@@ -2,10 +2,9 @@
   "compilerOptions": {
     "strict": true,
     "declaration": true,
-    "outDir": "lib",
-    "module": "commonjs",
+    "module": "ESNext",
     "skipLibCheck": true,
-    "target": "es3"
+    "target": "ESNext"
   },
   "include": [
     "src"

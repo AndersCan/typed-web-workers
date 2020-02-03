@@ -14,7 +14,7 @@ Library that help you get quickly up and running with web workers in **TypeScrip
 import { createWorker } from 'typed-web-workers'
 
 const worker = createWorker({
-  workerFunction: ({input, callback}) => callback(input * 2)),
+  workerFunction: ({input, callback}) => callback(input * 2),
   onMessage: result => console.log(`Worker returned: ${result}`),
   onError: error => console.log(`unhandled exception in Worker`)
 })
