@@ -9,7 +9,6 @@ Library that help you get quickly up and running with web workers in **TypeScrip
 `npm install typed-web-workers`
 
 # tl;dr
-
 ```javascript
 import { createWorker } from 'typed-web-workers'
 
@@ -22,7 +21,10 @@ worker.postMessage(1) // Worker returned: 2
 worker.postMessage(2) // Worker returned: 4
 
 ```
-Only `workerFunction` is required by `createWorker`
+Only `workerFunction` is required by `createWorker`.
+
+## Fiddles
+[ESM example](https://jsfiddle.net/anderscan/80y7xLwe/), [IIFE example](https://jsfiddle.net/anderscan/uw51genv/)
 
 ## Motivation for Web Workers
 - avoid blocking the main thread with long running tasks
