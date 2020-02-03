@@ -5,4 +5,5 @@ src/
 .prettierrc
 karma.conf.js
 index.html
+rollup.config.js
 tsconfig.json
