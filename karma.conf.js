@@ -2,15 +2,14 @@
 // Generated on Fri Apr 28 2017 20:17:45 GMT+0200 (Romance Daylight Time)
 
 module.exports = function(config) {
-  const isHeadless = !!process.env
-    .HEADLESS
+  const isHeadless = !!process.env.HEADLESS
 
   const isDev = !!process.env.DEV
 
   const browsers = isHeadless
     ? [
-        'ChromeHeadless',
-        'FirefoxHeadless'
+        'ChromeHeadless'
+        // 'FirefoxHeadless'
       ]
     : ['Chrome', 'Firefox']
 
@@ -21,14 +20,8 @@ module.exports = function(config) {
         flags: ['-headless']
       }
     },
-    frameworks: [
-      'jasmine',
-      'karma-typescript'
-    ],
-    files: [
-      'src/**/*.ts',
-      'tests/**/*.ts'
-    ],
+    frameworks: ['jasmine', 'karma-typescript'],
+    files: ['src/**/*.ts', 'tests/**/*.ts'],
     preprocessors: {
       '**/*.ts': 'karma-typescript'
     },
@@ -40,11 +33,7 @@ module.exports = function(config) {
       exclude: ['node_modules']
     },
 
-    reporters: [
-      'spec',
-      'karma-typescript',
-      'coverage'
-    ],
+    reporters: ['spec', 'karma-typescript', 'coverage'],
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,

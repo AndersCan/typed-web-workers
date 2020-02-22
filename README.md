@@ -113,3 +113,8 @@ In short, `createWorker`:
 3. returns a instance of a `TypedWorker` that acts as a wrapper to the _native_ worker.
 
 Check the source code of `TypedWorker.ts` if you want more information.
+
+## Browser support
+![Crossbrowser testing logo](/CBT_OS-logo_Black-V.png)
+
+[Cross Browser Testing](https://crossbrowsertesting.com/)

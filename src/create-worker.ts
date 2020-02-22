@@ -5,6 +5,7 @@ export interface ICreateWorkerProps<Input, Output, State = any> {
   onMessage?: (output: Output) => void
   onError?: (error: ErrorEvent) => void
   importScripts?: string[]
+  module?: boolean
 }
 
 export function createWorker<Input, Output, State = any>(

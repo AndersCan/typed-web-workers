@@ -25,12 +25,15 @@ export class TypedWorker<Input, Output, State = any>
     workerFunction: (props: WorkerFunctionProps<Input, Output, State>) => void,
     public onMessage = (_: Output) => {},
     importScriptsUris: string[] = [],
-    onError = (error: ErrorEvent) => {}
+    onError = (error: ErrorEvent) => {},
+    isModule = false
   ) {
     const initialState = `var __state__ = undefined`
     const setState = `function setState(newState){__state__ = newState;}`
     const getState = `function getState(){return __state__;}`
-    const importScriptsString = getImportScriptString(importScriptsUris)
+    const importScriptsString = isModule
+      ? ''
+      : getImportScriptString(importScriptsUris)
     const postMessage = `(${workerFunction}).call(this, {input: e.data, callback: postMessage, getState: getState, setState: setState})`
 
     const workerFile = `
@@ -42,7 +45,12 @@ export class TypedWorker<Input, Output, State = any>
     `
     const blob = new Blob([workerFile], { type: 'application/javascript' })
 
-    this._nativeWorker = new Worker(URL.createObjectURL(blob))
+    const workerOptions: WorkerOptions = isModule
+      ? {
+          type: 'module'
+        }
+      : {}
+    this._nativeWorker = new Worker(URL.createObjectURL(blob), workerOptions)
 
     const handleOnMessage = (messageEvent: MessageEvent) => {
       this.onMessage(messageEvent.data)
