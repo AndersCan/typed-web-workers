@@ -1,5 +1,5 @@
 # typed-web-workers
-[![npm version](https://img.shields.io/npm/v/typed-web-workers.svg?style=flat)](https://www.npmjs.com/package/typed-web-workers)[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![npm version](https://img.shields.io/npm/v/typed-web-workers.svg?style=flat)](https://www.npmjs.com/package/typed-web-workers)[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=AndersCan/typed-web-workers)](https://dependabot.com)[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 Library that help you get quickly up and running with web workers in **TypeScript** or **JavaScript** projects.
 
