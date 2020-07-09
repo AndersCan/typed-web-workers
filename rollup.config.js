@@ -10,23 +10,23 @@ const babelPresetESM = [
   [
     '@babel/preset-env',
     {
-      targets: { esmodules: true }
-    }
+      targets: { esmodules: true },
+    },
   ],
-  '@babel/typescript'
+  '@babel/typescript',
 ]
 
 const babelPresetNonESM = [
   [
     '@babel/preset-env',
     {
-      targets: { esmodules: false }
-    }
+      targets: { esmodules: false },
+    },
   ],
-  '@babel/typescript'
+  '@babel/typescript',
 ]
 
-const plugins = presets => {
+const plugins = (presets) => {
   return [
     typescript(),
     babel({
@@ -34,18 +34,18 @@ const plugins = presets => {
       exclude: 'node_modules/**',
       include: ['src/**/*'],
       presets,
-      extensions
+      extensions,
     }),
     resolve({
       mainFields: ['browser', 'module', 'main'],
       extensions,
-      preferBuiltins: true
+      preferBuiltins: true,
     }),
     commonjs(),
     terser({
       compress: true,
-      mangle: true
-    })
+      mangle: false,
+    }),
   ]
 }
 
@@ -58,10 +58,10 @@ const clientBuilds = [
         extend: false,
         file: 'lib/index.iife.js',
         name: 'typedWebWorkers',
-        sourcemap: false
-      }
+        sourcemap: false,
+      },
     ],
-    plugins: plugins(babelPresetNonESM)
+    plugins: plugins(babelPresetNonESM),
   },
   {
     input: 'src/index.ts',
@@ -70,10 +70,10 @@ const clientBuilds = [
         format: 'esm',
         extend: false,
         file: 'lib/index.esm.js',
-        sourcemap: false
-      }
+        sourcemap: false,
+      },
     ],
-    plugins: plugins(babelPresetESM)
+    plugins: plugins(babelPresetESM),
   },
   {
     input: 'src/index.ts',
@@ -82,10 +82,10 @@ const clientBuilds = [
         format: 'cjs',
         extend: false,
         file: 'lib/index.cjs.js',
-        sourcemap: false
-      }
+        sourcemap: false,
+      },
     ],
-    plugins: plugins(babelPresetNonESM)
-  }
+    plugins: plugins(babelPresetNonESM),
+  },
 ]
 export default clientBuilds
