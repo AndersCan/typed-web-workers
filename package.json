@@ -31,7 +31,7 @@
     "codecov": "^3.6.4",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.1.0",
-    "fast-check": "^1.20.0",
+    "fast-check": "^2.0.0",
     "jasmine": "^3.5.0",
     "jasmine-core": "^3.5.0",
     "karma": "^5.1.0",
