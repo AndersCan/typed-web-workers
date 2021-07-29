@@ -1,0 +1,42 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: y18n
+    versions:
+    - 4.0.1
+  - dependency-name: rollup
+    versions:
+    - 2.38.1
+    - 2.38.3
+    - 2.41.2
+    - 2.42.4
+    - 2.44.0
+  - dependency-name: karma
+    versions:
+    - 6.1.0
+    - 6.1.1
+    - 6.1.2
+    - 6.2.0
+    - 6.3.0
+    - 6.3.1
+  - dependency-name: "@babel/preset-env"
+    versions:
+    - 7.12.17
+    - 7.13.0
+    - 7.13.5
+  - dependency-name: "@babel/core"
+    versions:
+    - 7.13.0
+  - dependency-name: fast-check
+    versions:
+    - 2.12.1
+    - 2.13.0
+  - dependency-name: "@babel/preset-typescript"
+    versions:
+    - 7.12.13
+    - 7.12.7
